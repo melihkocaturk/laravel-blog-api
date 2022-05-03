@@ -166,7 +166,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        Sametsahindogan\JWTRedis\JWTRedisServiceProvider::class,
         /*
          * Application Service Providers...
          */

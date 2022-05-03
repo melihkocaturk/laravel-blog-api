@@ -17,6 +17,7 @@ return [
         'guard' => 'web',
         'passwords' => 'users',
     ],
+    
 
     /*
     |--------------------------------------------------------------------------
@@ -35,10 +36,21 @@ return [
     |
     */
 
+    // 'guards' => [
+    //     'web' => [
+    //         'driver' => 'session',
+    //         'provider' => 'users',
+    //     ],
+    // ],
+
     'guards' => [
         'web' => [
-            'driver' => 'session',
+            'driver' => 'jwt_redis_guard',
             'provider' => 'users',
+        ],
+        'api' => [
+            'driver' => 'jwt_redis_guard',
+            'provider' => 'users'
         ],
     ],
 
@@ -59,16 +71,23 @@ return [
     |
     */
 
+    // 'providers' => [
+    //     'users' => [
+    //         'driver' => 'eloquent',
+    //         'model' => App\Models\User::class,
+    //     ],
+
+    //     // 'users' => [
+    //     //     'driver' => 'database',
+    //     //     'table' => 'users',
+    //     // ],
+    // ],
+
     'providers' => [
         'users' => [
-            'driver' => 'eloquent',
-            'model' => App\Models\User::class,
+            'driver' => 'jwt_redis_user_provider',
+            'model' =>  App\Models\User::class, // Your User Model
         ],
-
-        // 'users' => [
-        //     'driver' => 'database',
-        //     'table' => 'users',
-        // ],
     ],
 
     /*

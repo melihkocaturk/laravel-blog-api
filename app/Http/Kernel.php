@@ -64,5 +64,10 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
+        'auth'               => \Sametsahindogan\JWTRedis\Http\Middleware\Authenticate::class,
+        'refreshable'        => \Sametsahindogan\JWTRedis\Http\Middleware\Refreshable::class,
+        'role'               => \Sametsahindogan\JWTRedis\Http\Middleware\RoleMiddleware::class,
+        'permission'         => \Sametsahindogan\JWTRedis\Http\Middleware\PermissionMiddleware::class,
+        'role_or_permission' => \Sametsahindogan\JWTRedis\Http\Middleware\RoleOrPermissionMiddleware::class,
     ];
 }

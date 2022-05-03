@@ -2,29 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\User;
+use Tymon\JWTAuth\Facades\JWTAuth;
+use Tymon\JWTAuth\Exceptions\JWTException;
+use Illuminate\Auth\Access\AuthorizationException;
+use Sametsahindogan\ResponseObjectCreator\ErrorResult;
+use Sametsahindogan\ResponseObjectCreator\ErrorService\ErrorBuilder;
+use Sametsahindogan\ResponseObjectCreator\SuccessResult;
 
 class AuthController extends Controller
 {
     public function login(Request $request)
     {
-        $attr = $request->validate([
-            'email' => ['required', 'email'],
-            'password' => ['required']
-        ]);
+        $credentials = $request->only('email', 'password');
 
-        $output = new \Symfony\Component\Console\Output\ConsoleOutput();
-        $output->writeln($attr);
+        try {
+            $token = JWTAuth::attempt($credentials);
 
-        if (!Auth::attempt($attr)) {
-            return response('Credentials not match', 401);
+            if (!$token) {
+                return response()->json(
+                    new ErrorResult(
+                        (new ErrorBuilder())
+                            ->title('Operation Failed')
+                            ->message('Wrong information.')
+                            ->extra([])
+                    )
+                );
+            }
+
+        } catch (AuthorizationException|JWTException $e) {
+
+            return response()->json(
+                new ErrorResult(
+                    (new ErrorBuilder())
+                        ->title('Operation Failed')
+                        ->message($e->getMessage())
+                        ->extra([])
+                )
+            );
         }
 
-        $user = User::where('email', $request['email'])->firstOrFail();
-        $token = $user->createToken('auth_token')->plainTextToken;
+        return response()->json(new SuccessResult(['token' => $token]));
         
         return response()->json(['access-token', $token]);
     }

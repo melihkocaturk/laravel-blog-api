@@ -25,7 +25,7 @@ Route::prefix('v1')->namespace('Api\V1')->group(function () {
         return response()->json(['Status' => 'Ok']);
     });
     
-    Route::group(['middleware' => ['auth:sanctum']], function () {
+    Route::group(['middleware' => 'auth'], function () {
         Route::apiResource('posts', PostController::class)->only(['index', 'show']);
 
         Route::get('/me', function() {
